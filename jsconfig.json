@@ -1,0 +1,14 @@
+{
+    // 路径别名提示
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        },
+        "types": [
+            "element-plus/global"
+        ],
+    }
+}

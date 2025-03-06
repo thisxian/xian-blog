@@ -1,0 +1,36 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+i,
+span,
+label,
+em,
+strong,
+a {
+    display: inline-block;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited,
+a:link {
+    color: inherit;
+}
+
+i {
+    font-style: normal;
+}

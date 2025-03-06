@@ -1,0 +1,50 @@
+// 设置宽高
+.size(@width: 100%, @height: @width) {
+    width: @width;
+    height: @height;
+}
+
+// 背景图片综合设置
+.bgImg(@url, @size: cover, @position: center) {
+    background-image: url(@url);
+    background-size: @size;
+    background-position: @position;
+    background-repeat: no-repeat;
+}
+
+// 居中（效果于当前节点）（会使元素脱离文档流）
+.centerThis {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+// 居中（父元素使用，效果于子节点）
+.centerSon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// 隐藏元素（占据文档流）
+.hide {
+    pointer-events: none;
+    opacity: 0;
+}
+
+// 隐藏元素（不占据文档流）
+.die {
+    display: none;
+}
+
+// 文字溢出省略号
+.textEllipsis(@line: 1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: @line;
+    -webkit-box-orient: vertical;
+}
