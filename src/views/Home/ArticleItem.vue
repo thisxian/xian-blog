@@ -1,6 +1,33 @@
 <!-- 文章列表子项 -->
+
+<script setup>
+
+defineProps({
+  //            类型     默认值
+  article: {
+    type: Object, default: {
+      id:  new Date() + Math.random(),
+      title: '这是文章标题',
+      createDate: '2024-03-15',
+      updateDate: '2024-03-20',
+      category: '分类',
+      tags: ['标签', '标签', '标签'],
+      excerpt: '对文章内容进行简单的介绍...'
+    }
+  },
+});
+
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString)
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
+
+
+</script>
+
 <template>
-  <div v-for="article in articles" :key="article.id" class="article-item">
+  <div :key="article.id" class="article-item">
     <div class="left">
       <div class="header">
         <h2 class="title">{{ article.title }}</h2>
@@ -23,25 +50,7 @@
   </div>
 </template>
 
-<script setup>
-const articles = ref([
-  {
-    id: 1,
-    title: 'Vue3 组合式API入门指南',
-    createDate: '2024-03-15',
-    updateDate: '2024-03-20',
-    category: '前端开发',
-    tags: ['Vue3', '教程', '基础'],
-    excerpt: '本文详细介绍Vue3组合式API的核心用法，帮助你快速掌握setup语法和响应式系统...'
-  },
-  // 更多文章...
-])
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-}
-</script>
 
 <style lang="less" scoped>
 .article-item {

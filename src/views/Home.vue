@@ -4,15 +4,25 @@ import ArticleItem from '@/views/Home/ArticleItem.vue'
 import Search from '@/views/Home/Search.vue'
 import Background from '@/views/Home/Background.vue';
 
-
-
 const store = Store();
 const router = useRouter()
 
-let a = ref(100);
+const articles = reactive([
+    {
+        id: 1,
+        title: '谷歌浏览器调试技巧',
+        createDate: '2024-03-16',
+        updateDate: '2024-03-20',
+        category: '前端开发',
+        tags: ['Vue3', '教程', '基础'],
+        excerpt: '本文详细介绍Vue3组合式API的核心用法，帮助你快速掌握setup语法和响应式系统...'
+    }
+])
 
-function toMy(query) {
-    router.push({ name: 'my', })
+// 前往文章内容详情
+function toArticle(title) {
+    const route = router.resolve({ path:'/article', query:{title} });
+    window.open(route.href, '_blank');
 }
 </script>
 
@@ -29,7 +39,7 @@ function toMy(query) {
             <!-- 搜索+文章列表 -->
             <div class="article-box">
                 <Search />
-                <ArticleItem v-for="i in 20" />
+                <ArticleItem @click="toArticle(articles[0].title)" v-for="i in 100" :article="articles[0]"/>
             </div>
         </div>
     </div>
@@ -49,9 +59,10 @@ function toMy(query) {
     .bgImg("https://s21.ax1x.com/2025/03/07/pEtKh5T.jpg");
 
     // 背景边缘透明
-    -webkit-mask-image: linear-gradient(to top, transparent, black 30px); /* 应用遮罩 */
+    -webkit-mask-image: linear-gradient(to top, transparent, black 30px);
+    /* 应用遮罩 */
     mask-image: linear-gradient(to top, transparent, black 30px);
-    -webkit-mask-size: cover; 
+    -webkit-mask-size: cover;
     mask-size: cover;
 
     p {
