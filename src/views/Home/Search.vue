@@ -90,6 +90,7 @@ const selectCategory = (category) => {
   border-radius: @radius;
   overflow: hidden;
   .shadow;
+  background-color: white;
 }
 
 
@@ -98,7 +99,6 @@ const selectCategory = (category) => {
   display: flex;
   max-width: @max-width;
   padding: 15px;
-  background-color: #ffffff;
   border-radius: @radius;
 
 
@@ -136,7 +136,6 @@ const selectCategory = (category) => {
       padding: 6px 15px;
       font-size: 12px;
       color: #666;
-      background: #f5f5f5;
       border: 1px solid #e0e0e0;
       border-radius: 14px;
       cursor: pointer;
@@ -172,7 +171,7 @@ const selectCategory = (category) => {
   padding: 20px;
   border-top: 1px solid #eee;
   margin-top: 10px;
-  z-index: 10;
+  // z-index: 10;
 
   .filter-group {
     margin-bottom: 20px;

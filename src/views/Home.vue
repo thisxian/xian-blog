@@ -2,6 +2,8 @@
 import { Store } from '@/store';
 import ArticleItem from '@/views/Home/ArticleItem.vue'
 import Search from '@/views/Home/Search.vue'
+import Background from '@/views/Home/Background.vue';
+
 
 
 const store = Store();
@@ -22,17 +24,13 @@ function toMy(query) {
         </div>
 
         <!-- 文章 -->
-        <div class="article-wrap">
+        <div class="content">
+            <!-- 动态背景 -->
+            <Background />
+            <!-- 搜索+文章列表 -->
             <div class="article-box">
-                <!-- 文章搜索 -->
-                <div>
-                    <Search />
-                </div>
-
-                <!-- 文章列表 -->
-                <div class="article-list">
-                    <ArticleItem v-for="i in 20" />
-                </div>
+                <Search />
+                <ArticleItem v-for="i in 20" />
             </div>
         </div>
     </div>
@@ -50,6 +48,11 @@ function toMy(query) {
     .bgImg("/img/bgimg.jpg");
     .centerSon;
 
+    -webkit-mask-image: linear-gradient(to top, transparent, black 30px);
+    mask-image: linear-gradient(to top, transparent, black 30px);
+    mask-size: cover;
+    -webkit-mask-size: cover;
+
     p {
         font-size: 50px;
         font-weight: bold;
@@ -57,27 +60,22 @@ function toMy(query) {
     }
 }
 
-// 文章
-.article-wrap {
-    padding: 50px 20px;
 
-    // 这里可以放背景
+.content {
+    padding: 50px 20px;
+    position: relative;
+
+    // 文章
     .article-box {
         width: 100%;
         max-width: 800px;
         min-width: 600px;
+        min-height: 2000px;
+        position: relative;
+        z-index: 1;
         left: 0;
         right: 0;
         margin: auto;
-
-        // 文章导航
-        .article-list {
-            min-height: 2000px;
-            border-radius: @radius;
-            left: 0;
-            right: 0;
-            margin: auto;
-        }
     }
 }
 </style>
