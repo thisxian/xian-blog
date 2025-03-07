@@ -1,95 +1,65 @@
 <script setup lang="js">
 import Background from './Home/Background.vue';
-import { getArticle } from '@/api/data';
+import { getArticleApi } from '@/api/data';
 // 解析markdown
-import { Marked } from 'marked';
+import { marked } from 'marked';
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 
+
 const route = useRoute()
 const title = ref(route.query.title);
-let articleHTML = ref(); // 渲染的html(文章)
-let tocHTML = ref();     // 渲染的html(大纲)
+let articleHTML = ref();    // 文章html
+let tocHTML = ref();        // 大纲html
+let tocList = reactive([])  // 大纲列表
 
-
-// 配置marked高亮
-const marked = new Marked(
-    markedHighlight({
-        async: false, // 如果是异步的，可以设置为 true
-        langPrefix: 'language-',   // 可选：用于给代码块添加前缀
-        emptyLangClass: 'no-lang', // 没有指定语言的代码块会添加这个类名
-        highlight: (code) => {
-            // 使用 highlight.js 的自动检测功能
-            return hljs.highlightAuto(code).value
+// 自定义 marked 渲染器
+marked.use({
+    renderer: {
+        heading(titleData) {
+            // 去掉标题不合法符号(防止标题当作id格式不过关)
+            titleData.text.replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+            const { text, depth } = titleData;
+            tocList.push({ text, depth })
+            return `<h${depth} id="${text}">${text}</h${depth}>`;
         }
-    })
-);
+    }
+});
+
+// 配置 marked 代码高亮
+marked.use(markedHighlight({
+    highlight: (code, lang) => {
+        return hljs.highlight(code, { language: lang }).value;
+    }
+}));
 
 
-
-// 在解析 Markdown 时，为所有标题添加唯一 id
-const renderer = new marked.Renderer();
-renderer.heading = (text, level) => {
-    const escapedText = text.toLowerCase()
-        .replace(/[^\w ]+/g, '') // 移除非单词字符和空格
-        .replace(/ +/g, '-');    // 空格转为短横线
-    return `<h${level} id="${escapedText}">${text}</h${level}>`;
-};
-
-// 获取文章
-onMounted(async () => {
-    const _text = await getArticleTEXT();
-    // 文章html
-    articleHTML.value = marked.parse(_text);
-    // 大纲html
-    let _tocData = generateToc(_text)
-    console.log(_tocData);
-
-    _tocData = [..._tocData, ..._tocData, ..._tocData, ..._tocData, ..._tocData, ..._tocData, ..._tocData]
-
-    tocHTML.value = getTocHTML(_tocData);
-})
-
-// 获取文章内容(未html化)
-async function getArticleTEXT() {
+// 获取文章HTML
+async function getArticleHTML() {
     if (!title.value) alert('发生错误!');
-    const _res = await getArticle(title.value);
+    const _res = await getArticleApi(title.value); // 请求文章原始数据
     const _text = _res.data.replace(/^---[\s\S]*?---\s*/m, '');  // 去除头部--- ---内的数据
-    return _text;
+    const _html = marked.parse(_text);
+    return _html;
 }
 
-// 解析标题并生成大纲数据
-function generateToc(markdown) {
-    const toc = [];
-    const regex = /(?:^|\n)(#{1,6}\s*.+?)(?=\n|$)/g; // 匹配标题（允许无空格）
-    let match;
-
-    while ((match = regex.exec(markdown)) !== null) {
-        const heading = match[0].trim();
-        // 提取标题级别（# 的数量）
-        const headingLevel = heading.match(/^#+/)[0].length;
-        // 提取标题文本（支持无空格的情况，如 #Hello）
-        const text = heading.replace(/^#+\s?/, '');
-        // 正确使用 headingLevel 而非未定义的 level
-        toc.push({ text, level: headingLevel });
-    }
-    return toc;
-};
-
-// 将大纲渲染为 HTML
-function getTocHTML(items) {
+// 获取大纲HTML
+function getTocHTML() {
+    tocList = [...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList]
     return `<ul>
-    ${items.map(item => `
-      <li class="title${item.level}">
-        <a href="#${item.text}">
-        ${item.text}
-        </a>
-      </li>
-    `).join('')}
-  </ul>`;
+                ${tocList.map(({ text, depth }) =>
+        `<li class="title${depth}"> 
+                    <a href="#${text}"> ${text} </a> 
+                </li>`).join('')}
+            </ul>`;
 };
 
+// 初始化界面
+onMounted(async () => {
+    articleHTML.value = await getArticleHTML()
+    tocHTML.value = getTocHTML();
+})
 
 </script>
 
@@ -105,59 +75,83 @@ function getTocHTML(items) {
 </template>
 
 <style lang="less">
-.article {
+html {
+    scroll-behavior: smooth;
+    /* 全局生效 */
+}
 
+.title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 20px 0;
+}
 
-    .title {
-        text-align: center;
-        font-size: 30px;
-        font-weight: bold;
-        padding: 20px 0;
+.content-and-toc {
+    position: relative;
+    margin: auto;
+    max-width: 1000px;
+    min-width: 800px;
+    display: flex;
+    gap: 10px;
+
+    .content {
+        flex-grow: 1;
+        background-color: white;
+        padding: 20px;
+        overflow: hidden;
+        border-radius: @radius;
     }
 
-    .content-and-toc {
-        position: relative;
-        margin: auto;
-        width: 1000px;
-        display: flex;
-        gap: 10px;
+    // 大纲
+    .toc {
+        width: 220px;
+        height: 100vh;
+        flex-shrink: 0;
+        background-color: white;
+        .shadow;
+        position: sticky;
+        top: 0;
+        overflow-y: auto;
+        border-radius: @radius;
 
-        .content {
-            max-width: @max-width;
-            min-width: @min-width;
-            width: 100%;
-            background-color: white;
-            padding: 20px;
-            overflow: hidden;
-            border-radius: @radius;
+        ul {
+            margin: 0;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+
+
+            li {
+                list-style: none;
+                // padding: 20px 20px 0 20px;
+                height: 35px;
+                // border: 1px solid red;
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+
+
+                .title1 {}
+
+                .title2 {
+                    // margin-left: 10px;
+                    text-indent: .5em;
+                }
+
+                .title3 {
+                    // margin-left: 15px;
+                    text-indent: 1em;
+                }
+            }
         }
 
-        .toc {
-            width: 200px;
-            // height: 300px;
-            height: 100vh;
-            flex-shrink: 0;
-            background-color: white;
-            .shadow;
-            position: sticky;
-            top: 0;
-            overflow-y: auto;
-            border-radius: @radius;
 
-            .title1 {}
-
-            .title2 {
-                margin-left: 10px;
-            }
-
-            .title3 {
-                margin-left: 15px;
-            }
-        }
     }
 }
 
-
+// ----------------------------------------------------------------------------
 /* 定制滚动条整体 */
 ::-webkit-scrollbar {
     width: 4px;

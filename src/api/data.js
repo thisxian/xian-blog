@@ -1,7 +1,7 @@
 import api from './_config.js'
 
 // 获取链接
-export function getLink() {
+export function getLinkApi() {
     return api({
         method: 'get',
         url: 'link.json',
@@ -9,7 +9,7 @@ export function getLink() {
 }
 
 // 获取文章
-export function getArticle(title) {
+export function getArticleApi(title) {
     return api({
         method: 'get',
         url:`article/${title}.md`,
