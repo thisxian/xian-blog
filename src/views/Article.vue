@@ -44,21 +44,11 @@ async function getArticleHTML() {
     return _html;
 }
 
-// 获取大纲HTML
-function getTocHTML() {
-    tocList = [...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList]
-    return `<ul>
-                ${tocList.map(({ text, depth }) =>
-        `<li class="title${depth}"> 
-                    <a href="#${text}"> ${text} </a> 
-                </li>`).join('')}
-            </ul>`;
-};
-
 // 初始化界面
 onMounted(async () => {
     articleHTML.value = await getArticleHTML()
-    tocHTML.value = getTocHTML();
+
+    tocList = [...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList]
 })
 
 </script>
@@ -69,7 +59,11 @@ onMounted(async () => {
         <p class="title">{{ route.query.title }}</p>
         <div class="content-and-toc">
             <div class="content" v-html="articleHTML"> </div>
-            <div class="toc" v-html="tocHTML"></div>
+            <div class="toc">
+                <a :class="`title${depth}`" :href="`#${text}`" v-for="{ text, depth } in tocList">
+                    {{ text }}
+                </a>
+            </div>
         </div>
     </div>
 </template>
@@ -114,40 +108,31 @@ html {
         top: 0;
         overflow-y: auto;
         border-radius: @radius;
+        cursor: pointer;
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
 
-        ul {
-            margin: 0;
-            padding: 10px 0;
-            display: flex;
-            flex-direction: column;
-            font-size: 14px;
-
-
-            li {
-                list-style: none;
-                // padding: 20px 20px 0 20px;
-                height: 35px;
-                // border: 1px solid red;
-                display: flex;
-                align-items: center;
-                padding: 0 20px;
-
-
-                .title1 {}
-
-                .title2 {
-                    // margin-left: 10px;
-                    text-indent: .5em;
-                }
-
-                .title3 {
-                    // margin-left: 15px;
-                    text-indent: 1em;
-                }
-            }
+        a {
+            height: 55px;
+            display: block;
+            padding: 10px 15px;
         }
 
+        font-size: 14px;
+        .title1 {
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+        }
+        
+        .title2 {
+            text-indent: 1em;
+            color: #555;
+        }
 
+        .title3 {
+            text-indent: 2em;
+            color: #777;
+        }
     }
 }
 
