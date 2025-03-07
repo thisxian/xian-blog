@@ -18,15 +18,14 @@ function toMy(query) {
 
 <template>
     <div class="home">
+        <!-- 动态背景 -->
+        <Background />
         <!-- 站首 -->
         <div class="head">
             <p>Xian的博客</p>
         </div>
-
         <!-- 文章 -->
         <div class="content">
-            <!-- 动态背景 -->
-            <Background />
             <!-- 搜索+文章列表 -->
             <div class="article-box">
                 <Search />
@@ -39,19 +38,21 @@ function toMy(query) {
 <style lang="less" scoped>
 .home {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 
 // 站首
 .head {
     .size(100%, 400px);
-    .bgImg("/img/bgimg.jpg");
     .centerSon;
+    .bgImg("/img/bgimg.jpg");
 
-    -webkit-mask-image: linear-gradient(to top, transparent, black 30px);
+    // 背景边缘透明
+    -webkit-mask-image: linear-gradient(to top, transparent, black 30px); /* 应用遮罩 */
     mask-image: linear-gradient(to top, transparent, black 30px);
+    -webkit-mask-size: cover; 
     mask-size: cover;
-    -webkit-mask-size: cover;
 
     p {
         font-size: 50px;
@@ -63,7 +64,6 @@ function toMy(query) {
 
 .content {
     padding: 50px 20px;
-    position: relative;
 
     // 文章
     .article-box {
