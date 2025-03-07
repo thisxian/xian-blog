@@ -46,7 +46,7 @@ function toMy(query) {
 .head {
     .size(100%, 400px);
     .centerSon;
-    .bgImg("/img/bgimg.jpg");
+    .bgImg("https://s21.ax1x.com/2025/03/07/pEtKh5T.jpg");
 
     // 背景边缘透明
     -webkit-mask-image: linear-gradient(to top, transparent, black 30px); /* 应用遮罩 */
