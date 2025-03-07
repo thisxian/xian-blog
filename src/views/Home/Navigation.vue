@@ -68,7 +68,7 @@ const toggleMore = () => {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .nav-container {
   margin: 0 auto;
   padding: 16px;

@@ -43,7 +43,7 @@ const formatDate = (dateString) => {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .article-item {
   padding: 15px;
   border-radius: 8px;
@@ -83,6 +83,7 @@ const formatDate = (dateString) => {
     display: flex;
     align-items: center;
     font-size: 14px;
+
     .category {
       background: #ededed;
       padding: 2px 8px;
