@@ -1,77 +1,7 @@
-<template>
-  <div class="search-container">
-    <!-- 左侧搜索框 -->
-    <div class="search-box">
-      <input
-        type="text"
-        placeholder="输入关键词搜索文章..."
-        class="search-input"
-      >
-    </div>
-
-    <!-- 右侧区域 -->
-    <div class="right-section">
-      <!-- 常驻标签 -->
-      <div class="visible-tags">
-        <span
-          v-for="(tag, index) in visibleTags"
-          :key="tag.name"
-          class="tag-item"
-          :class="{ active: tag.active }"
-          @click="toggleTag(tag)"
-        >
-          {{ tag.name }}
-        </span>
-      </div>
-
-      <!-- 更多按钮 -->
-      <button class="more-button" @click="toggleExpand">
-        更多
-        <span class="arrow" :class="{ expanded: isExpanded }">▼</span>
-      </button>
-
-      <!-- 展开面板 -->
-      <div v-show="isExpanded" class="expand-panel">
-        <!-- 分类过滤 -->
-        <div class="filter-group">
-          <h4 class="filter-title">分类</h4>
-          <div class="category-list">
-            <span
-              v-for="category in categories"
-              :key="category"
-              class="category-item"
-              :class="{ active: selectedCategory === category }"
-              @click="selectCategory(category)"
-            >
-              {{ category }}
-            </span>
-          </div>
-        </div>
-
-        <!-- 全部标签 -->
-        <div class="filter-group">
-          <h4 class="filter-title">标签</h4>
-          <div class="tag-list">
-            <span
-              v-for="tag in tags"
-              :key="tag.name"
-              class="tag-item"
-              :class="{ active: tag.active }"
-              @click="toggleTag(tag)"
-            >
-              {{ tag.name }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, computed } from 'vue';
 
-const isExpanded = ref(false);
+const isExpanded = ref(true);
 const selectedCategory = ref('');
 const categories = ref(['全部', '技术', '生活', '旅游', '编程']);
 const tags = ref([
@@ -99,21 +29,82 @@ const selectCategory = (category) => {
 };
 </script>
 
-<style lang="less">
+<template>
+  <div class="search-container">
+    <!-- 上区域，搜索分类 -->
+    <div class="top-box">
+      <!-- 左侧搜索框 -->
+      <div class="search-box">
+        <input type="text" placeholder="输入关键词搜索文章..." class="search-input">
+      </div>
+
+      <!-- 右侧区域 -->
+      <div class="right-section">
+        <!-- 常驻标签 -->
+        <!-- v-show="!isExpanded" -->
+        <div class="visible-tags">
+          <span v-for="(tag, index) in visibleTags" :key="tag.name" class="tag-item" :class="{ active: tag.active }"
+            @click="toggleTag(tag)">
+            {{ tag.name }}
+          </span>
+        </div>
+
+        <!-- 更多按钮 -->
+        <button class="more-button" @click="toggleExpand">
+          更多
+          <span class="arrow" :class="{ expanded: isExpanded }">▼</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 底部 展开面板 -->
+    <div v-show="isExpanded" class="expand-panel">
+      <!-- 分类过滤 -->
+      <div class="filter-group">
+        <h4 class="filter-title">分类</h4>
+        <div class="category-list">
+          <span v-for="category in categories" :key="category" class="category-item"
+            :class="{ active: selectedCategory === category }" @click="selectCategory(category)">
+            {{ category }}
+          </span>
+        </div>
+      </div>
+
+      <!-- 全部标签 -->
+      <div class="filter-group">
+        <h4 class="filter-title">标签</h4>
+        <div class="tag-list">
+          <span v-for="tag in tags" :key="tag.name" class="tag-item" :class="{ active: tag.active }"
+            @click="toggleTag(tag)">
+            {{ tag.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<style lang="less" scoped>
 .search-container {
+  border-radius: @radius;
+  overflow: hidden;
+  .shadow;
+}
+
+
+
+.top-box {
   display: flex;
-  align-items: center;
-  max-width: 960px;
-  margin: 20px auto;
+  max-width: @max-width;
   padding: 15px;
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
+  border-radius: @radius;
+
 
   .search-box {
     flex: 1;
-    margin-right: 20px;
+    padding-right: 20px;
 
     .search-input {
       width: 100%;
@@ -139,7 +130,6 @@ const selectCategory = (category) => {
 
     .visible-tags {
       display: flex;
-      gap: 8px;
     }
 
     .more-button {
@@ -171,105 +161,67 @@ const selectCategory = (category) => {
       }
     }
 
-    .expand-panel {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      width: 400px;
-      background: #fff;
-      padding: 20px;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-top: 10px;
-      z-index: 10;
 
-      .filter-group {
-        margin-bottom: 20px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        .filter-title {
-          margin: 0 0 12px 0;
-          font-size: 13px;
-          color: #666;
-          font-weight: normal;
-        }
-
-        .category-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-
-          .category-item {
-            padding: 6px 12px;
-            font-size: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-
-            &.active {
-              background: #409eff;
-              color: white;
-              border-color: #409eff;
-            }
-
-            &:hover {
-              border-color: #409eff;
-            }
-          }
-        }
-
-        .tag-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-
-          .tag-item {
-            padding: 6px 12px;
-            font-size: 12px;
-            background: #f5f5f5;
-            border: 1px solid #e0e0e0;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-
-            &.active {
-              background: #409eff;
-              color: white;
-              border-color: #409eff;
-            }
-
-            &:hover {
-              border-color: #409eff;
-            }
-          }
-        }
-      }
-    }
   }
 
-  .tag-item {
-    padding: 6px 12px;
-    font-size: 12px;
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.3s;
 
-    &.active {
-      background: #409eff;
-      color: white;
-      border-color: #409eff;
+}
+
+// 展开全部
+.expand-panel {
+  padding: 20px;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  z-index: 10;
+
+  .filter-group {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
     }
 
-    &:hover {
-      border-color: #409eff;
+
+    .category-list {
+      display: flex;
+      flex-wrap: wrap;
     }
+  }
+}
+
+
+// 分类和标签标题
+.filter-title {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #666;
+  font-weight: normal;
+}
+
+// 分类和标签
+.category-item,
+.tag-item {
+  color: #6b7280;
+  padding: 2px 6px;
+  background: #f9fafb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  .shadow;
+
+  &:not(:first-child) {
+    margin-left: 12px;
+  }
+
+
+  &.active {
+    background: #409eff;
+    color: white;
+    border-color: #409eff;
+  }
+
+  &:hover {
+    border-color: #409eff;
   }
 }
 </style>

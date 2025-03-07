@@ -45,17 +45,17 @@ const formatDate = (dateString) => {
 
 <style lang="less" scoped>
 .article-item {
-  padding: 15px;
+  padding: 20px 15px;
   border-radius: 8px;
-  box-shadow: @box-shadow;
   transition: all 0.2s ease;
-  background-color: rgb(253, 253, 253);
   margin-top: 20px;
   display: flex;
-
+  background-color: rgb(253, 253, 253);
+  cursor: pointer;
+  .shadow('hover', 1);
 
   &:hover {
-    box-shadow: @box-shadow2;
+    background-color: rgb(245, 245, 245);
   }
 }
 
