@@ -1,7 +1,7 @@
 <script setup lang="js">
 import { Store } from '@/store';
 import ArticleItem from '@/views/Home/ArticleItem.vue'
-import Navigation from '@/views/Home/Navigation.vue'
+import Search from '@/views/Home/Search.vue'
 
 
 const store = Store();
@@ -24,9 +24,9 @@ function toMy(query) {
         <!-- 文章 -->
         <div class="article-wrap">
             <div class="article-box">
-                <!-- 文章导航 -->
-                <div class="nav">
-                    <Navigation />
+                <!-- 文章搜索 -->
+                <div>
+                    <Search />
                 </div>
 
                 <!-- 文章列表 -->
