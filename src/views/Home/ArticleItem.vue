@@ -1,22 +1,25 @@
 <!-- 文章列表子项 -->
 <template>
   <div v-for="article in articles" :key="article.id" class="article-item">
-    <div class="header">
-      <h2 class="title">{{ article.title }}</h2>
-      <div class="meta">
-        <time class="date">📅 创建：{{ formatDate(article.createDate) }}</time>
-        <time class="date" v-if="article.updateDate">｜更新：{{ formatDate(article.updateDate) }}</time>
+    <div class="left">
+      <div class="header">
+        <h2 class="title">{{ article.title }}</h2>
+        <div class="meta">
+          <time class="date">📅 创建：{{ formatDate(article.createDate) }}</time>
+          <time class="date" v-if="article.updateDate">｜更新：{{ formatDate(article.updateDate) }}</time>
+        </div>
+      </div>
+      <div class="info">
+        <span class="category">🏷️ {{ article.category }}</span>
+        <div class="tags">
+          <span v-for="tag in article.tags" :key="tag" class="tag">#{{ tag }}</span>
+        </div>
       </div>
     </div>
-
-    <div class="info">
-      <span class="category">🏷️ {{ article.category }}</span>
-      <div class="tags">
-        <span v-for="tag in article.tags" :key="tag" class="tag">#{{ tag }}</span>
-      </div>
+    
+    <div class="right">
+      <p class="excerpt">{{ article.excerpt }}</p>
     </div>
-
-    <p class="excerpt">{{ article.excerpt }}</p>
   </div>
 </template>
 
@@ -48,65 +51,74 @@ const formatDate = (dateString) => {
   transition: all 0.2s ease;
   background-color: rgb(253, 253, 253);
   margin-top: 20px;
+  display: flex;
+  
 
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }
 
-.header {
-  margin-bottom: 0.75rem;
+.left {
+  width: 320px;
+  flex-shrink: 0;
+  .header {
+    margin-bottom: 0.75rem;
 
-  .title {
-    font-size: 1.25rem;
-    color: #2c3e50;
-    margin: 0 0 0.5rem;
-    line-height: 1.4;
-  }
+    .title {
+      font-size: 1.25rem;
+      color: #2c3e50;
+      margin: 0 0 0.5rem;
+      line-height: 1.4;
+    }
 
-  .meta {
-    font-size: 0.85rem;
-    color: #666;
-  }
-}
-
-.info {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  font-size: 0.9rem;
-
-  .category {
-    background: #f3f4f6;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    color: #4b5563;
-  }
-
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-
-    .tag {
-      color: #6b7280;
-      padding: 0.15rem 0.5rem;
-      background: #f9fafb;
-      border-radius: 4px;
+    .meta {
       font-size: 0.85rem;
+      color: #666;
+    }
+  }
+
+  .info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    .category {
+      background: #ededed;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #4b5563;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+
+      .tag {
+        color: #6b7280;
+        padding: 2px 6px;
+        background: #f9fafb;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+        margin-left: 5px;
+      }
     }
   }
 }
 
-.excerpt {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.right {
+  flex-grow: 1;
+  
+  .excerpt {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    
+  }
 }
 </style>
