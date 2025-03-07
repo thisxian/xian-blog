@@ -47,33 +47,33 @@ async function getArticleHTML() {
 // 初始化界面
 onMounted(async () => {
     articleHTML.value = await getArticleHTML()
-
-    tocList = [...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList, ...tocList]
 })
+
 
 </script>
 
 <template>
     <div class="article">
         <Background />
+
+
         <p class="title">{{ route.query.title }}</p>
         <div class="content-and-toc">
+            <!-- 文章 -->
             <div class="content" v-html="articleHTML"> </div>
+            <!-- 大纲 -->
             <div class="toc">
-                <a :class="`title${depth}`" :href="`#${text}`" v-for="{ text, depth } in tocList">
-                    {{ text }}
-                </a>
+                <el-anchor>
+                    <el-anchor-link :class="`title${depth}`" :href="`#${text}`" v-for="{ text, depth } in tocList">
+                        {{ text }}
+                    </el-anchor-link>
+                </el-anchor>
             </div>
         </div>
     </div>
 </template>
 
 <style lang="less">
-html {
-    scroll-behavior: smooth;
-    /* 全局生效 */
-}
-
 .title {
     text-align: center;
     font-size: 30px;
@@ -108,22 +108,12 @@ html {
         top: 0;
         overflow-y: auto;
         border-radius: @radius;
-        cursor: pointer;
         padding: 10px 0;
-        display: flex;
-        flex-direction: column;
 
-        a {
-            height: 55px;
-            display: block;
-            padding: 10px 15px;
-        }
-
-        font-size: 14px;
         .title1 {
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
         }
-        
+
         .title2 {
             text-indent: 1em;
             color: #555;
@@ -133,32 +123,11 @@ html {
             text-indent: 2em;
             color: #777;
         }
+
+        a {
+            padding: 10px;
+            font-size: 14px;
+        }
     }
-}
-
-// ----------------------------------------------------------------------------
-/* 定制滚动条整体 */
-::-webkit-scrollbar {
-    width: 4px;
-    /* 宽度 */
-}
-
-/* 定制滚动条轨道 */
-::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    /* 轨道颜色 */
-}
-
-/* 定制滚动条滑块 */
-::-webkit-scrollbar-thumb {
-    background-color: #888;
-    /* 滑块颜色 */
-    border-radius: 6px;
-    /* 圆角 */
-}
-
-/* 滑块在鼠标悬停时改变颜色 */
-::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
 }
 </style>
