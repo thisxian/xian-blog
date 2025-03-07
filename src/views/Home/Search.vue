@@ -9,24 +9,12 @@
       >
     </div>
 
-    <!-- 右侧过滤条件 -->
-    <div class="filter-container">
-      <!-- 分类选择 -->
-      <select class="category-select">
-        <option value="">全部分类</option>
-        <option
-          v-for="category in categories"
-          :key="category"
-          :value="category"
-        >
-          {{ category }}
-        </option>
-      </select>
-
-      <!-- 标签列表 -->
-      <div class="tag-list">
+    <!-- 右侧区域 -->
+    <div class="right-section">
+      <!-- 常驻标签 -->
+      <div class="visible-tags">
         <span
-          v-for="tag in tags"
+          v-for="(tag, index) in visibleTags"
           :key="tag.name"
           class="tag-item"
           :class="{ active: tag.active }"
@@ -35,38 +23,93 @@
           {{ tag.name }}
         </span>
       </div>
+
+      <!-- 更多按钮 -->
+      <button class="more-button" @click="toggleExpand">
+        更多
+        <span class="arrow" :class="{ expanded: isExpanded }">▼</span>
+      </button>
+
+      <!-- 展开面板 -->
+      <div v-show="isExpanded" class="expand-panel">
+        <!-- 分类过滤 -->
+        <div class="filter-group">
+          <h4 class="filter-title">分类</h4>
+          <div class="category-list">
+            <span
+              v-for="category in categories"
+              :key="category"
+              class="category-item"
+              :class="{ active: selectedCategory === category }"
+              @click="selectCategory(category)"
+            >
+              {{ category }}
+            </span>
+          </div>
+        </div>
+
+        <!-- 全部标签 -->
+        <div class="filter-group">
+          <h4 class="filter-title">标签</h4>
+          <div class="tag-list">
+            <span
+              v-for="tag in tags"
+              :key="tag.name"
+              class="tag-item"
+              :class="{ active: tag.active }"
+              @click="toggleTag(tag)"
+            >
+              {{ tag.name }}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-// 模拟数据
-const categories = ref(['技术', '生活', '旅游', '编程']);
+const isExpanded = ref(false);
+const selectedCategory = ref('');
+const categories = ref(['全部', '技术', '生活', '旅游', '编程']);
 const tags = ref([
   { name: 'Vue', active: false },
   { name: 'JavaScript', active: false },
   { name: 'CSS', active: false },
   { name: '前端', active: false },
+  { name: 'Node.js', active: false },
+  { name: 'Webpack', active: false },
 ]);
+
+// 常驻显示的标签
+const visibleTags = computed(() => tags.value.slice(0, 3));
+
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value;
+};
 
 const toggleTag = (tag) => {
   tag.active = !tag.active;
 };
+
+const selectCategory = (category) => {
+  selectedCategory.value = category === selectedCategory.value ? '' : category;
+};
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .search-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   max-width: 960px;
   margin: 20px auto;
   padding: 15px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
 
   .search-box {
     flex: 1;
@@ -85,67 +128,147 @@ const toggleTag = (tag) => {
         border-color: #409eff;
         box-shadow: 0 0 4px rgba(64, 158, 255, 0.2);
       }
+    }
+  }
 
-      &::placeholder {
-        color: #999999;
+  .right-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+
+    .visible-tags {
+      display: flex;
+      gap: 8px;
+    }
+
+    .more-button {
+      padding: 6px 15px;
+      font-size: 12px;
+      color: #666;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s;
+
+      .arrow {
+        font-size: 10px;
+        margin-left: 6px;
+        transform: rotate(0deg);
+        transition: transform 0.3s;
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
+      }
+
+      &:hover {
+        border-color: #409eff;
+        color: #409eff;
+      }
+    }
+
+    .expand-panel {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 400px;
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+      z-index: 10;
+
+      .filter-group {
+        margin-bottom: 20px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .filter-title {
+          margin: 0 0 12px 0;
+          font-size: 13px;
+          color: #666;
+          font-weight: normal;
+        }
+
+        .category-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+
+          .category-item {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &.active {
+              background: #409eff;
+              color: white;
+              border-color: #409eff;
+            }
+
+            &:hover {
+              border-color: #409eff;
+            }
+          }
+        }
+
+        .tag-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+
+          .tag-item {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &.active {
+              background: #409eff;
+              color: white;
+              border-color: #409eff;
+            }
+
+            &:hover {
+              border-color: #409eff;
+            }
+          }
+        }
       }
     }
   }
 
-  .filter-container {
-    display: flex;
-    align-items: center;
+  .tag-item {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
 
-    .category-select {
-      padding: 10px 15px;
-      margin-right: 15px;
-      font-size: 14px;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      background-color: #ffffff;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      &:hover {
-        border-color: #409eff;
-      }
-
-      &:focus {
-        outline: none;
-        box-shadow: 0 0 4px rgba(64, 158, 255, 0.2);
-      }
+    &.active {
+      background: #409eff;
+      color: white;
+      border-color: #409eff;
     }
 
-    .tag-list {
-      display: flex;
-      align-items: center;
-
-      .tag-item {
-        padding: 6px 12px;
-        margin-right: 10px;
-        font-size: 12px;
-        color: #666666;
-        background-color: #f5f5f5;
-        border: 1px solid #e0e0e0;
-        border-radius: 14px;
-        cursor: pointer;
-        transition: all 0.3s;
-
-        &:last-child {
-          margin-right: 0;
-        }
-
-        &:hover {
-          color: #409eff;
-          border-color: #409eff;
-        }
-
-        &.active {
-          color: #ffffff;
-          background-color: #409eff;
-          border-color: #409eff;
-        }
-      }
+    &:hover {
+      border-color: #409eff;
     }
   }
 }
