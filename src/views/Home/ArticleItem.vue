@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="right">
       <p class="excerpt">{{ article.excerpt }}</p>
     </div>
@@ -43,25 +43,26 @@ const formatDate = (dateString) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .article-item {
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: @box-shadow;
   transition: all 0.2s ease;
   background-color: rgb(253, 253, 253);
   margin-top: 20px;
   display: flex;
-  
+
 
   &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: @box-shadow2;
   }
 }
 
 .left {
   width: 320px;
   flex-shrink: 0;
+
   .header {
     margin-bottom: 0.75rem;
 
@@ -87,7 +88,7 @@ const formatDate = (dateString) => {
       padding: 2px 8px;
       border-radius: 4px;
       color: #4b5563;
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+      box-shadow: @box-shadow;
     }
 
     .tags {
@@ -99,8 +100,8 @@ const formatDate = (dateString) => {
         padding: 2px 6px;
         background: #f9fafb;
         border-radius: 4px;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-        margin-left: 5px;
+        box-shadow: @box-shadow;
+        margin-left: 7px;
       }
     }
   }
@@ -108,7 +109,7 @@ const formatDate = (dateString) => {
 
 .right {
   flex-grow: 1;
-  
+
   .excerpt {
     color: #666;
     font-size: 16px;
@@ -118,7 +119,7 @@ const formatDate = (dateString) => {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    
+
   }
 }
 </style>
