@@ -1,8 +1,21 @@
-* {
+*:not(.article *) {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     list-style: none;
+}
+
+p,
+div,
+ol,
+ul,
+li,
+a,
+span,
+i,
+em,
+strong {
+    color: #333;
 }
 
 i,

@@ -54,7 +54,7 @@ function toArticle(title) {
 
 // 站首
 .head {
-    .size(100%, 400px);
+    .size(100%, 320px);
     .centerSon;
     .bgImg("https://s21.ax1x.com/2025/03/07/pEtKh5T.jpg");
 
