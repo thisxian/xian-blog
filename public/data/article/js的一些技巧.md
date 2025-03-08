@@ -1,12 +1,10 @@
 ---
 title: js的一些技巧
-date: 2022-05-14 18:28:12
-abbrlink: a1e5ee21
-tags:
-  - javascript
-categories: 前端
-cover: >-
-  https://img2.huashi6.com/images/resource/2015/11/16/5358h1372p0.png?imageMogr2/quality/100/interlace/1/thumbnail/2000x%3E/format/jpeg
+createDate: 2024-03-16
+updateDate: 2024-03-20
+category: Web
+tags: js es6
+excerpt: 掌握后能加速js项目的开发
 ---
 
 ## 打乱数组
