@@ -5,18 +5,8 @@
     list-style: none;
 }
 
-p,
-div,
-ol,
-ul,
-li,
-a,
-span,
-i,
-em,
-strong {
-    color: #333;
-}
+
+
 
 i,
 span,
@@ -44,6 +34,7 @@ i {
 /* 定制滚动条整体 */
 ::-webkit-scrollbar {
     width: 4px;
+    height: 10px;
     /* 宽度 */
 }
 

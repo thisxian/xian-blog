@@ -4,7 +4,6 @@ import ArticleItem from '@/views/Home/ArticleItem.vue'
 import Search from '@/views/Home/Search.vue'
 import Background from '@/views/Home/Background.vue';
 
-const store = Store();
 const router = useRouter()
 
 const articles = reactive([

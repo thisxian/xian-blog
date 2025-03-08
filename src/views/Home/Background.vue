@@ -9,9 +9,6 @@
 .background {
     width: 100%;
     height: 500px;
-    // position: absolute;
-    // top: 0;
-    // left: 0;
     position: fixed;
     z-index: 1;
     
