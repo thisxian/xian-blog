@@ -259,7 +259,7 @@ onMounted(() => {
 
             // 代码框
             .code-block {
-                font-size: 18px;
+                font-size: 16px;
                 position: relative;
                 background: #f5f5f5;
                 border-radius: @radius;
