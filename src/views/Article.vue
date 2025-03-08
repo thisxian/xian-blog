@@ -14,11 +14,11 @@ const title = ref(route.query.title);
 let articleHTML = ref();    // 文章html
 let tocList = reactive([]);  // 大纲列表
 let articleLink = reactive({
-    title: '',
-    category: '',
-    createDate: '',
-    updateDate: '',
-    excerpt: '',
+    title: '标题',
+    category: '分类',
+    createDate: '创建时间',
+    updateDate: '更新时间',
+    excerpt: '简介',
     tags: [],
 });
 
