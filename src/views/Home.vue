@@ -2,32 +2,27 @@
 import ArticleItem from '@/views/Home/ArticleItem.vue'
 import Search from '@/views/Home/Search.vue'
 import Background from '@/views/Home/Background.vue';
-import { getLinkApi } from '@/api/data';
+import { getArticleMsgs } from '@/api/data';
 
 
 const router = useRouter()
-const tags = reactive([]);
-const articleLink = reactive([
+const articleMsgs = reactive([
     // {
-    //     id: 1,
     //     title: '谷歌浏览器调试技巧',
     //     createDate: '2024-03-16',
     //     updateDate: '2024-03-20',
-    //     category: '前端开发',
     //     tags: ['Vue3', '教程', '基础'],
-    //     excerpt: '本文详细介绍Vue3组合式API的核心用法，帮助你快速掌握setup语法和响应式系统...'
+    //     excerpt: '本文详细介绍Vue3组合式API的核心用法，帮助你快速掌握setup语法和响应式系统...',
+    //     isShow: true
     // }
 ])
 
 // 初始化
 onMounted(async () => {
-    const _res = await getLinkApi();
+    const _res = await getArticleMsgs();
     const _data = _res.data;
-    _data.forEach(_ => { tags.push(..._.tags.split(' ')) });
-    tags.splice(0, tags.length, ...new Set(tags));
-    articleLink.push(..._data);
-    console.log(articleLink);
-    
+    _data.forEach(_ => { _.isShow = true; });
+    articleMsgs.push(..._data);
 })
 
 // 前往文章内容详情
@@ -51,8 +46,9 @@ function toArticle(title) {
         <div class="content">
             <!-- 搜索+文章列表 -->
             <div class="article-box">
-                <Search :tags />
-                <ArticleItem @click="toArticle(item.title)" v-for="item in articleLink" :article="item" />
+                <Search :articleMsgs="articleMsgs" />
+                <ArticleItem @click="toArticle(item.title)" v-for="item in articleMsgs" :article="item"
+                    :key="item.title" v-show="item.isShow" />
             </div>
         </div>
     </div>

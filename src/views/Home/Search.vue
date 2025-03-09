@@ -1,24 +1,52 @@
 <script setup>
-import { ref, computed } from 'vue';
 
-const isExpanded = ref(true);
-
-// category
-defineProps({
-  tags: {
+const props = defineProps({
+  articleMsgs: {
     type: Array,
+    default: () => []
   },
 });
 
-const hotTags = reactive(['js','c++','qt']);
+const tags = reactive([]);
+const hotTags = reactive(['js', 'node', 'c++']);
+let activeTag = ref('');
+let searchText = ref('')
 
+// 获取标题列表
+const stopWatchArticleMsgs = watch(() => props.articleMsgs, (newVal) => {
+  if (newVal.length > 0) {
+    let _tags = []
+    props.articleMsgs.forEach(_ => { _tags.push(..._.tags.split(' ')); });
+    tags.push(...new Set(_tags));
+    stopWatchArticleMsgs();
+  }
+}, { deep: true, });
+
+// 展开关闭更多标签
+const isExpanded = ref(true);
 const toggleExpand = () => {
   isExpanded.value = !isExpanded.value;
 };
 
-const toggleTag = (tag) => {
-  tag.active = !tag.active;
+// 点击标签显示标签对应文章
+function clickTag(tag) {
+  searchText.value = '';
+  if (activeTag.value == tag) {
+    activeTag.value = '';
+    props.articleMsgs.forEach(_ => { _.isShow = true })
+  } else {
+    activeTag.value = tag;
+    props.articleMsgs.forEach(_ => { _.isShow = _.tags.includes(tag) })
+  }
 };
+
+// 显示搜索的标题
+watch(() => searchText, ({ value }) => {
+  activeTag.value = '';
+  props.articleMsgs.forEach(_ => {
+    _.isShow = _.title.toLowerCase().includes(value)
+  })
+}, { deep: true });
 
 
 </script>
@@ -29,35 +57,33 @@ const toggleTag = (tag) => {
     <div class="top-box">
       <!-- 左侧搜索框 -->
       <div class="search-box">
-        <input type="text" placeholder="输入关键词搜索文章..." class="search-input">
+        <input type="text" placeholder="输入关键词搜索文章" class="search-input" v-model="searchText">
       </div>
 
       <!-- 右侧区域 -->
       <div class="right-section">
         <!-- 常驻标签 -->
-        <div class="visible-tags" v-show="!isExpanded" >
-          <span v-for="(tag, index) in hotTags" :key="index" class="tag-item" @click="toggleTag(tag)">
+        <div class="visible-tags" v-show="!isExpanded">
+          <span v-for="(tag, index) in hotTags" :key="index" class="tag-item" :class="{ 'active': activeTag == tag }"
+            @click="clickTag(tag)">
             {{ tag }}
           </span>
         </div>
 
         <!-- 更多按钮 -->
         <button class="more-button" @click="toggleExpand">
-          更多标签
-          <span class="arrow" :class="{ expanded: isExpanded }">▼</span>
+          {{ isExpanded ? "收起更多" : "更多标签" }}
+          <i class="arrow" :class="{ expanded: isExpanded }">▼</i>
         </button>
       </div>
     </div>
 
     <!-- 底部 展开面板 -->
     <div v-show="isExpanded" class="expand-panel">
-  
-
       <!-- 全部标签 -->
       <div class="filter-group">
-
         <div class="tag-list">
-          <span v-for="tag in tags" :key="tag.name" class="tag-item" @click="toggleTag(tag)">
+          <span v-for="tag in tags" class="tag-item" :class="{ 'active': activeTag == tag }" @click="clickTag(tag)">
             {{ tag }}
           </span>
         </div>
@@ -73,32 +99,54 @@ const toggleTag = (tag) => {
   overflow: hidden;
   .shadow;
   background-color: white;
+
+  // 标签
+  .tag-item {
+    color: #6b7280;
+    padding: 2px 6px;
+    background: #f9fafb;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    .shadow;
+
+    &:not(:first-child) {
+      margin-left: 12px;
+    }
+
+
+    &.active {
+      background-color: #999;
+      color: white;
+    }
+
+    &:hover {
+      outline: 2px solid rgba(0, 0, 0, 0.5);
+    }
+  }
 }
-
-
 
 .top-box {
   display: flex;
   max-width: @max-width;
   padding: 15px;
-  border-radius: @radius;
-
 
   .search-box {
     flex: 1;
-    padding-right: 20px;
+    position: relative;
+    overflow: hidden;
 
     .search-input {
       width: 100%;
       padding: 12px 16px;
       font-size: 14px;
       border: 1px solid #e0e0e0;
-      border-radius: 6px;
       outline: none;
       transition: border-color 0.3s;
+      border-radius: @radius;
 
       &:focus {
-        border-color: #409eff;
+        border-color: #333;
         box-shadow: 0 0 4px rgba(64, 158, 255, 0.2);
       }
     }
@@ -109,6 +157,7 @@ const toggleTag = (tag) => {
     align-items: center;
     gap: 12px;
     position: relative;
+    margin-left: 15px;
 
     .visible-tags {
       display: flex;
@@ -137,12 +186,10 @@ const toggleTag = (tag) => {
       }
 
       &:hover {
-        border-color: #409eff;
-        color: #409eff;
+        border-color: #666;
+        color: #333;
       }
     }
-
-
   }
 
 
@@ -153,7 +200,6 @@ const toggleTag = (tag) => {
   padding: 20px;
   border-top: 1px solid #eee;
   margin-top: 10px;
-  // z-index: 10;
 
   .filter-group {
     margin-bottom: 20px;
@@ -161,48 +207,6 @@ const toggleTag = (tag) => {
     &:last-child {
       margin-bottom: 0;
     }
-
-
-    .category-list {
-      display: flex;
-      flex-wrap: wrap;
-    }
-  }
-}
-
-
-// 分类和标签标题
-.filter-title {
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  color: #666;
-  font-weight: normal;
-}
-
-// 分类和标签
-.category-item,
-.tag-item {
-  color: #6b7280;
-  padding: 2px 6px;
-  background: #f9fafb;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  .shadow;
-
-  &:not(:first-child) {
-    margin-left: 12px;
-  }
-
-
-  &.active {
-    background: #409eff;
-    color: white;
-    border-color: #409eff;
-  }
-
-  &:hover {
-    border-color: #409eff;
   }
 }
 </style>

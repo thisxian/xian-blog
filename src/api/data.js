@@ -1,7 +1,7 @@
 import api from './_config.js'
 
 // 获取链接
-export function getLinkApi() {
+export function getArticleMsgs() {
     return api({
         method: 'get',
         url: 'link.json',

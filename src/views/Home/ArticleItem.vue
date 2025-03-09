@@ -4,12 +4,11 @@
 
 defineProps({
   article: {
-    type: Object, default: {
-      id: new Date() + Math.random(),
+    type: Object,
+    default: {
       title: '这是文章标题',
       createDate: '2024-03-15',
       updateDate: '2024-03-20',
-      category: '分类',
       tags: "标签 标签 标签",
       excerpt: '对文章内容进行简单的介绍...'
     }
@@ -50,16 +49,15 @@ const formatDate = (dateString) => {
 
 <style lang="less" scoped>
 .article-item {
-  padding: 0 30px;
+  height: 130px;
+  padding: 15px 30px;
   border-radius: 8px;
   transition: all 0.2s ease;
   margin-top: 20px;
   display: flex;
-  align-items: center;
   background-color: rgb(253, 253, 253);
   cursor: pointer;
   .shadow('hover', 1);
-  height: 130px;
 
   &:hover {
     background-color: rgb(245, 245, 245);
@@ -110,6 +108,7 @@ const formatDate = (dateString) => {
   flex: 1;
   flex-shrink: 0;
   .textEllipsis(4);
+  padding-left: 20px;
 
   .excerpt {
     color: #666;
