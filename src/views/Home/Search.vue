@@ -97,13 +97,13 @@ watch(() => searchText, ({ value }) => {
 .search-container {
   border-radius: @radius;
   overflow: hidden;
-  .shadow;
   background-color: white;
+  .shadow;
 
   // 标签
   .tag-item {
-    color: #6b7280;
     padding: 2px 6px;
+    color: #6b7280;
     background: #f9fafb;
     border-radius: 4px;
     cursor: pointer;
@@ -121,7 +121,7 @@ watch(() => searchText, ({ value }) => {
     }
 
     &:hover {
-      outline: 2px solid rgba(0, 0, 0, 0.5);
+      outline: 1px solid #999;
     }
   }
 }
@@ -166,28 +166,29 @@ watch(() => searchText, ({ value }) => {
     .more-button {
       padding: 6px 15px;
       font-size: 12px;
-      color: #666;
-      border: 1px solid #e0e0e0;
-      border-radius: 14px;
+      color: #6b7280;
+      background: #f9fafb;
+      border-radius: @radius;
       cursor: pointer;
       display: flex;
       align-items: center;
       transition: all 0.3s;
+      .shadow;
 
       .arrow {
         font-size: 10px;
         margin-left: 6px;
         transform: rotate(0deg);
         transition: transform 0.3s;
+        transform: rotate(90deg);
 
         &.expanded {
-          transform: rotate(180deg);
+          transform: rotate(0deg);
         }
       }
 
       &:hover {
-        border-color: #666;
-        color: #333;
+        outline: 1px solid #999;
       }
     }
   }

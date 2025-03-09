@@ -56,10 +56,18 @@ marked.use({
     // 配置 marked 代码高亮
     ...markedHighlight({
         highlight: (code, lang) => {
-            return hljs.highlight(code, { language: lang }).value;
+            // 如果语言已指定且有效，则使用该语言高亮
+            if (lang && hljs.getLanguage(lang)) {
+                return hljs.highlight(code, { language: lang }).value;
+            }
+            // 否则，使用自动检测（highlightAuto）
+            else {
+                return hljs.highlightAuto(code).value;
+            }
         }
     })
 })
+
 
 // 获取文章HTML
 async function getArticleHTML() {
@@ -70,7 +78,6 @@ async function getArticleHTML() {
     let _articleLink = _res.data.match(/^---\s*([\s\S]*?)\s*---/)[1];
     _articleLink = yaml.load(_articleLink, { schema: yaml.FAILSAFE_SCHEMA });
     _articleLink.tags = _articleLink.tags.split(' ');
-
     Object.assign(articleLink, _articleLink);
 
     // 获取正文（去除头部--- ---的数据）
@@ -86,6 +93,8 @@ onMounted(async () => {
 
 // 大纲标题hover随着屏幕滚动滚动
 onMounted(() => {
+    // 有bug
+    return;
     const $_elmarker = document.querySelector('.el-anchor__marker')
     let _elmarkerIsShow = true;
 
@@ -157,6 +166,11 @@ onMounted(() => {
 </template>
 
 <style lang="less">
+@h1-color: rgb(230, 85, 85);
+@h2-color: #61bd55;
+@h3-color: rgb(90, 156, 255);
+@h4-color: #fba824;
+
 .article {
     padding-bottom: 60px;
 }
@@ -177,7 +191,7 @@ onMounted(() => {
         .centerSon;
         font-size: 50px;
         font-weight: bold;
-        color: #333;
+        color: #444;
         position: relative;
     }
 }
@@ -215,86 +229,6 @@ onMounted(() => {
                 padding: 0 2px;
             }
         }
-
-        .article-html {
-
-            h1,
-            h2,
-            h3,
-            h4,
-            h5,
-            h6 {
-                color: #222;
-            }
-
-            // markdown样式
-            img {
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-                max-width: 100%;
-            }
-
-            li {
-                padding: 5px;
-                color: #444;
-            }
-
-            // 代码框
-            .code-block {
-                font-size: 16px;
-                position: relative;
-                background: #f5f5f5;
-                border-radius: @radius;
-                display: flex;
-
-                // 复制框
-                .copy-box {
-                    width: 100%;
-                    height: 30px;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 0 20px;
-                    box-sizing: border-box;
-
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 1px;
-                        box-shadow: 0px 1px 2px rgb(174, 174, 174);
-                    }
-
-                    .lang {
-                        color: #7a7a7a;
-                    }
-
-                    // 复制代码按钮
-                    .copy-btn {
-                        padding: 4px 8px;
-                        border: none;
-                        cursor: pointer;
-                        background-color: rgba(0, 0, 0, 0);
-                        color: #7a7a7a;
-
-                        &:hover {
-                            color: #606060;
-                        }
-                    }
-                }
-
-                .code-html {
-                    padding: 50px 30px 20px 20px;
-                    overflow-x: auto;
-                }
-            }
-        }
     }
 
     // 大纲
@@ -310,27 +244,197 @@ onMounted(() => {
         border-radius: @radius;
         padding: 10px 0;
 
+        // 跟着动的小方块
         .el-anchor__marker {
-            background-color: "#FFFCE6" !important;
+            background-color: #666;
+        }
+
+        .el-anchor__link {
+            &:hover {
+                color: inherit;
+                text-shadow: 0 1px 1px #ccc;
+            }
+
+            &.is-active {
+                color: inherit;
+            }
         }
 
         .title1 {
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+            // text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+            color: @h1-color;
         }
 
         .title2 {
-            text-indent: 1em;
-            color: #555;
+            text-indent: 0.5em;
+            color: @h2-color;
         }
 
         .title3 {
+            text-indent: 1em;
+            color: @h3-color;
+        }
+
+        .title4 {
+            text-indent: 1.5em;
+            color: @h4-color;
+        }
+
+        .title5 {
             text-indent: 2em;
+            color: #777;
+        }
+
+        .title6 {
+            text-indent: 2.5em;
             color: #777;
         }
 
         a {
             padding: 10px;
             font-size: 14px;
+        }
+    }
+}
+
+// 解析后的markdown样式
+.article-html {
+
+    h5,
+    h6,
+    p {
+        color: #444;
+    }
+
+    h1 {
+        color: @h1-color;
+    }
+
+    h2 {
+        color: @h2-color;
+    }
+
+    h3 {
+        color: @h3-color;
+    }
+
+    h4 {
+        color: @h4-color;
+    }
+
+    // markdown样式
+    img {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 100%;
+    }
+
+    li table {
+        margin-top: 14px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        /* 合并边框 */
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #333;
+        font-family: Arial, sans-serif;
+
+        /* 表头样式 */
+        th {
+            background-color: #F5F5F5;
+            padding: 12px 8px;
+            border: 1px solid #e9ecef;
+            text-align: left;
+        }
+
+        /* 数据行样式 */
+        td {
+            padding: 12px 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* 奇偶行背景色交替 */
+        tr:nth-child(odd) {
+            background-color: #f5f5f57e;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        /* 首行加粗样式 */
+        tr:first-child th {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+    }
+
+    li {
+        padding: 5px;
+        color: #444;
+    }
+
+    // 代码框
+    .code-block {
+        font-size: 16px;
+        position: relative;
+        background: #f5f5f5;
+        border-radius: @radius;
+        display: flex;
+
+        * {
+            font-family: 'Consolas';
+        }
+
+        // 复制框
+        .copy-box {
+            width: 100%;
+            height: 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                box-shadow: 0px 1px 2px rgb(174, 174, 174);
+            }
+
+            .lang {
+                color: #7a7a7a;
+            }
+
+            // 复制代码按钮
+            .copy-btn {
+                padding: 4px 8px;
+                border: none;
+                cursor: pointer;
+                background-color: rgba(0, 0, 0, 0);
+                color: #7a7a7a;
+
+                &:hover {
+                    color: #606060;
+                }
+            }
+        }
+
+        .code-html {
+            padding: 50px 30px 20px 20px;
+            overflow-x: auto;
+            opacity: .9;
         }
     }
 }

@@ -5,6 +5,10 @@
     list-style: none;
 }
 
+*{
+    font-family: Arial, sans-serif;
+}
+
 i,
 span,
 label,
