@@ -7,7 +7,7 @@ import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import { throttle, copyText } from '@/utils/xian.js';
-
+import yaml from 'js-yaml'
 
 const route = useRoute();
 const title = ref(route.query.title);
@@ -15,16 +15,17 @@ let articleHTML = ref();    // 文章html
 let tocList = reactive([]);  // 大纲列表
 let articleLink = reactive({
     title: '标题',
-    category: '分类',
     createDate: '创建时间',
     updateDate: '更新时间',
     excerpt: '简介',
     tags: [],
 });
 
+
+// 配置markdown解析
 marked.use({
     extensions: [
-        // 标题添加标题id
+        // 标题添加id（实现锚点链接）
         {
             name: 'heading',
             renderer(titleData) {
@@ -51,60 +52,31 @@ marked.use({
                         </pre>`;
             }
         }
-    ]
+    ],
+    // 配置 marked 代码高亮
+    ...markedHighlight({
+        highlight: (code, lang) => {
+            return hljs.highlight(code, { language: lang }).value;
+        }
+    })
 })
-
-// 配置 marked 代码高亮
-marked.use(markedHighlight({
-    highlight: (code, lang) => {
-        return hljs.highlight(code, { language: lang }).value;
-    }
-}));
 
 // 获取文章HTML
 async function getArticleHTML() {
     if (!title.value) alert('发生错误!');
     const _res = await getArticleApi(title.value); // 请求文章原始数据
-    Object.assign(articleLink, parseYAMLFrontMatter(_res.data)); // 获取分类标题等数据
-    // console.log(articleLink);
-    const _text = _res.data.replace(/^---[\s\S]*?---\s*/m, '');  // 去除头部--- ---内的数据
+
+    // 获取分类标题等数据
+    let _articleLink = _res.data.match(/^---\s*([\s\S]*?)\s*---/)[1];
+    _articleLink = yaml.load(_articleLink, { schema: yaml.FAILSAFE_SCHEMA });
+    _articleLink.tags = _articleLink.tags.split(' ');
+
+    Object.assign(articleLink, _articleLink);
+
+    // 获取正文（去除头部--- ---的数据）
+    const _text = _res.data.replace(/^---[\s\S]*?---\s*/m, '');
     const _html = marked.parse(_text);
     return _html;
-}
-
-// 解析YAML front matter函数
-function parseYAMLFrontMatter(content) {
-    // 1. 提取YAML内容（使用正则表达式匹配---包裹的部分）
-    const match = content.match(/---\s*(.*?)\s*---/s); // s修饰符让.匹配换行符
-    
-    if (!match) return null;
-
-    const yamlContent = match[1].trim();
-
-    // 2. 解析键值对
-    const lines = yamlContent.split('\n');
-    const obj = {};
-
-    lines.forEach(line => {
-        const trimmedLine = line.trim();
-        if (trimmedLine === '') return;
-
-        // 找到第一个冒号的位置，避免多冒号分割错误
-        const colonIndex = trimmedLine.indexOf(':');
-        if (colonIndex === -1) return;
-
-        const key = trimmedLine.substring(0, colonIndex).trim();
-        const value = trimmedLine.substring(colonIndex + 1).trim();
-
-        // 可选：处理特殊字段（如tags转为数组）
-        if (key === 'tags') {
-            obj[key] = value.split(' ').filter(tag => tag.trim() !== '');
-        } else {
-            obj[key] = value;
-        }
-    });
-
-    return obj;
 }
 
 // 初始化界面
@@ -165,8 +137,7 @@ onMounted(() => {
             <!-- 文章 -->
             <div class="content-box">
                 <div class="article-link">
-                    <p>分类：{{ articleLink.category }}</p>
-                    <p>标签：<span v-for="tag in articleLink.tags">{{ tag }}</span></p>
+                    <p>标签：<span v-for="tag in articleLink.tags">#{{ tag }}</span></p>
                     <p>创建时间：{{ articleLink.createDate }}</p>
                     <p>更新时间：{{ articleLink.updateDate }}</p>
                 </div>
@@ -206,7 +177,7 @@ onMounted(() => {
         .centerSon;
         font-size: 50px;
         font-weight: bold;
-        color: rgb(41, 41, 41);
+        color: #333;
         position: relative;
     }
 }
@@ -230,6 +201,7 @@ onMounted(() => {
         border-radius: @radius;
         .shadow;
 
+        // 标签 时间
         .article-link {
             width: 100%;
             font-size: 12px;
@@ -238,12 +210,22 @@ onMounted(() => {
             display: flex;
             justify-content: center;
             gap: 20px;
+
             span {
                 padding: 0 2px;
             }
         }
 
         .article-html {
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                color: #222;
+            }
 
             // markdown样式
             img {

@@ -2,7 +2,6 @@
 title: js的一些技巧
 createDate: 2024-03-16
 updateDate: 2024-03-20
-category: Web
 tags: js es6
 excerpt: 掌握后能加速js项目的开发
 ---

@@ -6,7 +6,6 @@ import { getLinkApi } from '@/api/data';
 
 
 const router = useRouter()
-const categorys = reactive([]);
 const tags = reactive([]);
 const articleLink = reactive([
     // {
@@ -24,13 +23,11 @@ const articleLink = reactive([
 onMounted(async () => {
     const _res = await getLinkApi();
     const _data = _res.data;
-    articleLink.push(..._data);
-    _data.forEach(_ => {
-        categorys.push(_.category)
-        tags.push(..._.tags.split(' '))
-    });
-    categorys.splice(0, categorys.length, ...new Set(categorys));
+    _data.forEach(_ => { tags.push(..._.tags.split(' ')) });
     tags.splice(0, tags.length, ...new Set(tags));
+    articleLink.push(..._data);
+    console.log(articleLink);
+    
 })
 
 // 前往文章内容详情
@@ -54,7 +51,7 @@ function toArticle(title) {
         <div class="content">
             <!-- 搜索+文章列表 -->
             <div class="article-box">
-                <Search :categorys :tags />
+                <Search :tags />
                 <ArticleItem @click="toArticle(item.title)" v-for="item in articleLink" :article="item" />
             </div>
         </div>

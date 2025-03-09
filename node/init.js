@@ -28,7 +28,7 @@ function processMarkdownFiles() {
       if (frontMatterMatch) {
         try {
           // 解析YAML为对象
-          const frontMatter = yaml.load(frontMatterMatch[1]);
+          const frontMatter = yaml.load(frontMatterMatch[1], { schema: yaml.FAILSAFE_SCHEMA });
           result.push(frontMatter);
         } catch (e) {
           console.error(`解析YAML失败：${file}`, e);
@@ -38,7 +38,7 @@ function processMarkdownFiles() {
       }
     }
 
-    
+
     // 写入JSON文件
     fs.writeFileSync(outputPath, JSON.stringify(result, null, 2), 'utf8');
     console.log('数据已成功写入:', outputPath);

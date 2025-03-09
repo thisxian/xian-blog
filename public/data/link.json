@@ -1,25 +1,22 @@
 [
   {
     "title": "js的一些技巧",
-    "createDate": "2024-03-16T00:00:00.000Z",
-    "updateDate": "2024-03-20T00:00:00.000Z",
-    "category": "Web",
+    "createDate": "2024-03-16",
+    "updateDate": "2024-03-20",
     "tags": "js es6",
     "excerpt": "掌握后能加速js项目的开发"
   },
   {
     "title": "Web Component快速上手",
-    "createDate": "2024-03-16T00:00:00.000Z",
-    "updateDate": "2024-03-20T00:00:00.000Z",
-    "category": "Web",
+    "createDate": "2024-03-16",
+    "updateDate": "2024-03-20",
     "tags": "js",
     "excerpt": "js的原生模块化开发"
   },
   {
     "title": "谷歌浏览器调试技巧",
-    "createDate": "2024-03-16T00:00:00.000Z",
-    "updateDate": "2024-03-20T00:00:00.000Z",
-    "category": "Web",
+    "createDate": "2024-03-16",
+    "updateDate": "2024-03-20",
     "tags": "js",
     "excerpt": "谷歌浏览器的正确打开方式"
   }
