@@ -3,15 +3,14 @@
 <script setup>
 
 defineProps({
-  //            类型     默认值
   article: {
     type: Object, default: {
-      id:  new Date() + Math.random(),
+      id: new Date() + Math.random(),
       title: '这是文章标题',
       createDate: '2024-03-15',
       updateDate: '2024-03-20',
       category: '分类',
-      tags: ['标签', '标签', '标签'],
+      tags: "标签 标签 标签",
       excerpt: '对文章内容进行简单的介绍...'
     }
   },
@@ -29,18 +28,15 @@ const formatDate = (dateString) => {
 <template>
   <div :key="article.id" class="article-item">
     <div class="left">
-      <div class="header">
-        <h2 class="title">{{ article.title }}</h2>
-        <div class="meta">
-          <time class="date">📅 创建：{{ formatDate(article.createDate) }}</time>
-          <time class="date" v-if="article.updateDate">｜更新：{{ formatDate(article.updateDate) }}</time>
-        </div>
+      <h2 class="title">{{ article.title }}</h2>
+      <div class="meta">
+        <i class="icon">📅</i>
+        <span class="date"> 创建：{{ formatDate(article.createDate) }}</span>
+        <span class="date" v-if="article.updateDate">｜更新：{{ formatDate(article.updateDate) }}</span>
       </div>
-      <div class="info">
-        <span class="category">🏷️ {{ article.category }}</span>
-        <div class="tags">
-          <span v-for="tag in article.tags" :key="tag" class="tag">#{{ tag }}</span>
-        </div>
+      <div class="tags">
+        <i class="icon">🏷️</i>
+        <span v-for="tag in article.tags.split(' ')" :key="tag" class="tag">#{{ tag }}</span>
       </div>
     </div>
 
@@ -54,14 +50,16 @@ const formatDate = (dateString) => {
 
 <style lang="less" scoped>
 .article-item {
-  padding: 20px 15px;
+  padding: 0 30px;
   border-radius: 8px;
   transition: all 0.2s ease;
   margin-top: 20px;
   display: flex;
+  align-items: center;
   background-color: rgb(253, 253, 253);
   cursor: pointer;
   .shadow('hover', 1);
+  height: 130px;
 
   &:hover {
     background-color: rgb(245, 245, 245);
@@ -70,66 +68,54 @@ const formatDate = (dateString) => {
 
 .left {
   width: 320px;
+  flex: 1;
   flex-shrink: 0;
+  font-size: 14px;
 
-  .header {
-    margin-bottom: 0.75rem;
-
-    .title {
-      font-size: 1.25rem;
-      color: #2c3e50;
-      margin: 0 0 0.5rem;
-      line-height: 1.4;
-    }
-
-    .meta {
-      font-size: 0.85rem;
-      color: #666;
-    }
+  .title {
+    font-size: 20px;
+    color: #2c3e50;
   }
 
-  .info {
+  .icon {
+    width: 25px;
+    .centerSon;
+    padding-right: 10px;
+  }
+
+  .meta {
+    color: #666;
     display: flex;
-    align-items: center;
-    font-size: 14px;
+    padding: 10px 0;
+  }
 
-    .category {
-      background: #ededed;
-      padding: 2px 8px;
+  .tags {
+    display: flex;
+
+    .tag {
+      color: #6b7280;
+      padding: 1px 8px;
+      background: #f9fafb;
       border-radius: 4px;
-      color: #4b5563;
-      box-shadow: @box-shadow;
-    }
+      .shadow;
 
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-
-      .tag {
-        color: #6b7280;
-        padding: 2px 6px;
-        background: #f9fafb;
-        border-radius: 4px;
-        box-shadow: @box-shadow;
-        margin-left: 7px;
+      ~.tag {
+        margin-left: 10px;
       }
     }
   }
 }
 
 .right {
-  flex-grow: 1;
+  flex: 1;
+  flex-shrink: 0;
+  .textEllipsis(4);
 
   .excerpt {
     color: #666;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.6;
     margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-
   }
 }
 </style>

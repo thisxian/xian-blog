@@ -2,19 +2,15 @@
 import { ref, computed } from 'vue';
 
 const isExpanded = ref(true);
-const selectedCategory = ref('');
-const categories = ref(['全部', '技术', '生活', '旅游', '编程']);
-const tags = ref([
-  { name: 'Vue', active: false },
-  { name: 'JavaScript', active: false },
-  { name: 'CSS', active: false },
-  { name: '前端', active: false },
-  { name: 'Node.js', active: false },
-  { name: 'Webpack', active: false },
-]);
 
-// 常驻显示的标签
-const visibleTags = computed(() => tags.value.slice(0, 3));
+// category
+defineProps({
+  tags: {
+    type: Array,
+  },
+});
+
+const hotTags = reactive(['js','c++','qt']);
 
 const toggleExpand = () => {
   isExpanded.value = !isExpanded.value;
@@ -24,9 +20,7 @@ const toggleTag = (tag) => {
   tag.active = !tag.active;
 };
 
-const selectCategory = (category) => {
-  selectedCategory.value = category === selectedCategory.value ? '' : category;
-};
+
 </script>
 
 <template>
@@ -41,17 +35,15 @@ const selectCategory = (category) => {
       <!-- 右侧区域 -->
       <div class="right-section">
         <!-- 常驻标签 -->
-        <!-- v-show="!isExpanded" -->
-        <div class="visible-tags">
-          <span v-for="(tag, index) in visibleTags" :key="tag.name" class="tag-item" :class="{ active: tag.active }"
-            @click="toggleTag(tag)">
-            {{ tag.name }}
+        <div class="visible-tags" v-show="!isExpanded" >
+          <span v-for="(tag, index) in hotTags" :key="index" class="tag-item" @click="toggleTag(tag)">
+            {{ tag }}
           </span>
         </div>
 
         <!-- 更多按钮 -->
         <button class="more-button" @click="toggleExpand">
-          更多
+          更多标签
           <span class="arrow" :class="{ expanded: isExpanded }">▼</span>
         </button>
       </div>
@@ -59,24 +51,14 @@ const selectCategory = (category) => {
 
     <!-- 底部 展开面板 -->
     <div v-show="isExpanded" class="expand-panel">
-      <!-- 分类过滤 -->
-      <div class="filter-group">
-        <h4 class="filter-title">分类</h4>
-        <div class="category-list">
-          <span v-for="category in categories" :key="category" class="category-item"
-            :class="{ active: selectedCategory === category }" @click="selectCategory(category)">
-            {{ category }}
-          </span>
-        </div>
-      </div>
+  
 
       <!-- 全部标签 -->
       <div class="filter-group">
-        <h4 class="filter-title">标签</h4>
+
         <div class="tag-list">
-          <span v-for="tag in tags" :key="tag.name" class="tag-item" :class="{ active: tag.active }"
-            @click="toggleTag(tag)">
-            {{ tag.name }}
+          <span v-for="tag in tags" :key="tag.name" class="tag-item" @click="toggleTag(tag)">
+            {{ tag }}
           </span>
         </div>
       </div>

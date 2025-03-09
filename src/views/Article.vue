@@ -76,6 +76,7 @@ async function getArticleHTML() {
 function parseYAMLFrontMatter(content) {
     // 1. 提取YAML内容（使用正则表达式匹配---包裹的部分）
     const match = content.match(/---\s*(.*?)\s*---/s); // s修饰符让.匹配换行符
+    
     if (!match) return null;
 
     const yamlContent = match[1].trim();
