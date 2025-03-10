@@ -28,7 +28,7 @@ onMounted(async () => {
 // 前往文章内容详情
 function toArticle(title) {
     const route = router.resolve({ path: '/article', query: { title } });
-    window.open(route.href, '_blank');
+    router.push(route)
 }
 
 
