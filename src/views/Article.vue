@@ -88,6 +88,7 @@ async function getArticleHTML() {
 
 // 初始化界面
 onMounted(async () => {
+    title.value = route.params.title
     articleHTML.value = await getArticleHTML()
 })
 

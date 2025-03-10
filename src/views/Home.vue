@@ -25,13 +25,6 @@ onMounted(async () => {
     articleMsgs.push(..._data);
 })
 
-// 前往文章内容详情
-function toArticle(title) {
-    const route = router.resolve({ path: '/article', query: { title } });
-    router.push(route)
-}
-
-
 </script>
 
 <template>
@@ -47,8 +40,10 @@ function toArticle(title) {
             <!-- 搜索+文章列表 -->
             <div class="article-box">
                 <Search :articleMsgs="articleMsgs" />
-                <ArticleItem @click="toArticle(item.title)" v-for="item in articleMsgs" :article="item"
-                    :key="item.title" v-show="item.isShow" />
+                <router-link :to="`/article/${item.title}`" v-for="item in articleMsgs" v-show="item.isShow" :key="item.title"
+                    target="_blank">
+                    <ArticleItem :article="item" />
+                </router-link>
             </div>
         </div>
     </div>
@@ -88,14 +83,17 @@ function toArticle(title) {
     // 文章
     .article-box {
         width: 100%;
-        max-width: 800px;
-        min-width: 600px;
+        max-width: @max-width;
+        min-width: @min-width;
         min-height: 2000px;
         position: relative;
         z-index: 1;
         left: 0;
         right: 0;
         margin: auto;
+        a{
+            width: 100%;
+        }
     }
 }
 </style>
