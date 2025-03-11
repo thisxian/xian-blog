@@ -188,12 +188,13 @@ onMounted(() => {
     mask-size: cover;
 
     .title {
-        width: 100%;
         .centerSon;
         font-size: 50px;
         font-weight: bold;
-        color: #444;
-        position: relative;
+        color: #2d2d2d;
+        font-family: 'Segoe UI', 'Helvetica Neue', -apple-system, system-ui, sans-serif;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
     }
 }
 

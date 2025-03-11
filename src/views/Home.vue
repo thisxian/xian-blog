@@ -33,7 +33,7 @@ onMounted(async () => {
         <Background />
         <!-- 站首 -->
         <div class="head">
-            <p>Xian的博客</p>
+            <p class="title">Xian的博客</p>
         </div>
         <!-- 文章 -->
         <div class="content">
@@ -69,10 +69,13 @@ onMounted(async () => {
     -webkit-mask-size: cover;
     mask-size: cover;
 
-    p {
+    .title {
         font-size: 50px;
         font-weight: bold;
-        color: rgba(0, 0, 0, 0.8);
+        color: #2d2d2d;
+        font-family: 'Segoe UI', 'Helvetica Neue', -apple-system, system-ui, sans-serif;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
     }
 }
 
