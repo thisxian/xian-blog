@@ -36,7 +36,7 @@ export default defineConfig({
         charset: false,
         additionalData: `
           @import "@/assets/style/xian.less"; 
-          @import "@/assets/style/variables.less"; 
+          @import "@/assets/style/property.less"; 
         `,
       },
     },
