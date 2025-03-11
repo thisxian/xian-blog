@@ -2,7 +2,8 @@
 import ArticleItem from '@/views/Home/ArticleItem.vue'
 import Search from '@/views/Home/Search.vue'
 import Background from '@/views/Home/Background.vue';
-import { getArticleMsgs } from '@/api/data';
+import { getArticleMsgs } from '@/api/data.js';
+import { getDaysDifference } from '@/utils/index.js';
 
 
 const router = useRouter()
@@ -37,13 +38,18 @@ onMounted(async () => {
         </div>
         <!-- 文章 -->
         <div class="content">
+            <div class="side-hide"></div>
             <!-- 搜索+文章列表 -->
             <div class="article-box">
                 <Search :articleMsgs="articleMsgs" />
-                <router-link :to="`/article/${item.title}`" v-for="item in articleMsgs" v-show="item.isShow" :key="item.title"
-                    target="_blank">
+                <router-link :to="`/article/${item.title}`" v-for="item in articleMsgs" v-show="item.isShow"
+                    :key="item.title" target="_blank">
                     <ArticleItem :article="item" />
                 </router-link>
+            </div>
+            <div class="side-doc">
+                <p>共 {{ articleMsgs.length }} 篇文章</p>
+                <p>已运行 {{ getDaysDifference('2025-03-08') }} 天</p>
             </div>
         </div>
     </div>
@@ -82,20 +88,44 @@ onMounted(async () => {
 
 .content {
     padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
 
     // 文章
     .article-box {
         width: 100%;
         max-width: @max-width;
         min-width: @min-width;
-        min-height: 2000px;
+        min-height: 1000px;
         position: relative;
-        z-index: 1;
-        left: 0;
-        right: 0;
-        margin: auto;
-        a{
+
+        a {
             width: 100%;
+        }
+    }
+
+    .side-hide {
+        flex-grow: 1;
+        max-width: 220px - 20px;
+    }
+
+    .side-doc {
+        width: 220px;
+        height: 147px;
+        background-color: white;
+        border-radius: @radius;
+        .shadow;
+        color: #2C3E50;
+        .centerSon;
+        font-weight: bold;
+        flex-direction: column;
+        position: sticky;
+        top: 20px;
+
+        p {
+            padding: 5px 0;
         }
     }
 }

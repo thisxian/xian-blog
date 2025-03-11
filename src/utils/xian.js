@@ -7,9 +7,9 @@ export default xian;
 
 /**
  * 防抖函数
- * @param {Function} fn 目标函数
- * @param {number} delay 延迟时间（毫秒）
- * @returns {Function} 包装后的防抖函数
+ * @param { Function } fn 目标函数
+ * @param { number } delay 延迟时间（毫秒）
+ * @returns { Function } 包装后的防抖函数
  */
 export function debounce(fn, delay = 300) {
     let timer = null;
@@ -25,9 +25,9 @@ export function debounce(fn, delay = 300) {
 
 /**
 * 节流函数
-* @param {Function} fn 目标函数
-* @param {number} interval 时间间隔（毫秒）
-* @returns {Function} 包装后的节流函数
+* @param { Function } fn 目标函数
+* @param { number } interval 时间间隔（毫秒）
+* @returns { Function } 包装后的节流函数
 */
 export function throttle(fn, interval = 1000) {
     let lastTime = 0;
@@ -43,8 +43,8 @@ export function throttle(fn, interval = 1000) {
 
 /**
 * 复制函数
-* @param {string} text 复制文本
-* @returns {undefined}
+* @param { string } text 复制文本
+* @returns { undefined }
 */
 export async function copyText(text) {
     try {

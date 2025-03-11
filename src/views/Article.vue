@@ -14,11 +14,11 @@ const title = ref(route.query.title);
 let articleHTML = ref();    // 文章html
 let tocList = reactive([]);  // 大纲列表
 let articleLink = reactive({
-    title: '标题',
-    createDate: '创建时间',
-    updateDate: '更新时间',
+    title: '',
+    createDate: '0000-00-00', // 创建时间
+    updateDate: '0000-00-00', // 更新时间
     excerpt: '简介',
-    tags: [],
+    tags: ['#××','#××'],
 });
 
 
@@ -144,6 +144,7 @@ onMounted(() => {
             <div class="title"> {{ articleLink.title }}</div>
         </div>
         <div class="content-and-toc">
+            <div class="side-hide"> </div>
             <!-- 文章 -->
             <div class="content-box">
                 <div class="article-link">
@@ -154,7 +155,7 @@ onMounted(() => {
                 <div class="article-html" v-html="articleHTML"></div>
             </div>
             <!-- 大纲 -->
-            <div class="toc">
+            <div class="side-toc">
                 <el-anchor>
                     <el-anchor-link color="#FFFCE6" :class="`title${depth}`" :href="`#${text}`"
                         v-for="{ text, depth } in tocList">
@@ -202,11 +203,10 @@ onMounted(() => {
 .content-and-toc {
     position: relative;
     margin: auto;
-    max-width: 1040px;
-    min-width: 800px;
     display: flex;
     gap: 20px;
     align-items: flex-start;
+    justify-content: center;
 
     // 文章内容
     .content-box {
@@ -216,6 +216,10 @@ onMounted(() => {
         overflow: hidden;
         border-radius: @radius;
         .shadow;
+        max-width: @max-width;
+        min-width: @min-width;
+        min-height: 400px;
+        box-sizing: border-box;
 
         // 标签 时间
         .article-link {
@@ -233,9 +237,15 @@ onMounted(() => {
         }
     }
 
+    .side-hide {
+        flex-grow: 1;
+        max-width: 220px - 20px;
+    }
+
     // 大纲
-    .toc {
+    .side-toc {
         width: 220px;
+        min-height: 200px;
         max-height: 100vh;
         flex-shrink: 0;
         background-color: white;
